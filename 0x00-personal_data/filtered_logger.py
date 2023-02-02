@@ -60,7 +60,6 @@ def main():
     db.close()
 
 
-
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class. """
 
