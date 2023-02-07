@@ -2,9 +2,11 @@
 """
 This module contains the BasicAuth class that inherits from Auth
 """
+from typing import Tuple
 from api.v1.auth.auth import Auth
 import base64
 import binascii
+import re
 
 
 class BasicAuth(Auth):
@@ -37,3 +39,15 @@ class BasicAuth(Auth):
             return raw_header.decode('utf-8')
         except (binascii.Error, UnicodeDecodeError):
             return None
+    
+    def extract_user_credentials(self, decoded_base64_authorization_header: str) -> Tuple[str, str]:
+        """ Returns the user email and password from the Base64 decoded value. """
+        if not decoded_base64_authorization_header:
+            return None, None
+        if not isinstance(decoded_base64_authorization_header, str):
+            return None, None
+        pattern = r'([^:]+):(.+)'
+        match = re.fullmatch(pattern, decoded_base64_authorization_header)
+        if match:
+            return match.group(1), match.group(2)
+        return None, None
