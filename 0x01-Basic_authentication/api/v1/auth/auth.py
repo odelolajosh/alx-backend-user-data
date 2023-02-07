@@ -16,7 +16,7 @@ class Auth:
         if path[-1] != '/':
             path += '/'
         for excluded_path in excluded_paths:
-            if excluded_path[-2:] == '/*':
+            if excluded_path[-1] == '*':
                 excluded_path = excluded_path[:-1]
                 if excluded_path == path[:len(excluded_path)]:
                     return False
