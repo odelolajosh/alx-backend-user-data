@@ -4,6 +4,7 @@ This module contains the BasicAuth class that inherits from Auth
 """
 from api.v1.auth.auth import Auth
 import base64
+import binascii
 
 
 class BasicAuth(Auth):
@@ -34,5 +35,5 @@ class BasicAuth(Auth):
         try:
             raw_header = base64.b64decode(base64_authorization_header)
             return raw_header.decode('utf-8')
-        except Exception:
+        except (binascii.Error, UnicodeDecodeError):
             return None
