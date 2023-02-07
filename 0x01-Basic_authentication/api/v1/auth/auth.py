@@ -11,7 +11,22 @@ class Auth:
     """ Auth class to interact with the authentication database """
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """ Returns False - path will not be excluded """
-        return False
+        if not path or not excluded_paths:
+            return True
+        if path[-1] != '/':
+            path += '/'
+        for excluded_path in excluded_paths:
+            if excluded_path[-2:] == '/*':
+                excluded_path = excluded_path[:-1]
+                if excluded_path == path[:len(excluded_path)]:
+                    return False
+
+            if excluded_path[-1] != '/':
+                excluded_path += '/'
+
+            if excluded_path == path:
+                return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         """ Returns None - request will not contain an authorization header """
