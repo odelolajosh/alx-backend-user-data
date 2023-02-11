@@ -1,4 +1,4 @@
-#!/usr/bin/python3 env
+#!/usr/bin/env python3
 """ This module contains the UserSession model. """
 from .base import Base
 
