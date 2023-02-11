@@ -25,16 +25,18 @@ class SessionDBAuth(SessionExpAuth):
         if not session_id:
             return None
         from models.user_session import UserSession
-        user_session = UserSession.search({'session_id': session_id})
-        if not user_session:
+        user_sessions = UserSession.search({'session_id': session_id})
+        if not user_sessions:
             return None
         if self.session_duration <= 0:
-            return user_session[0].user_id
+            return user_sessions[0].user_id
         duration = timedelta(seconds=self.session_duration)
-        expiry_time = user_session[0].created_at + duration
-        if expiry_time < datetime.now():
+        expiry_time = user_sessions[0].created_at + duration
+        if expiry_time < datetime.utcnow():
+            print('expired')
+            user_sessions[0].remove()
             return None
-        return user_session[0].user_id
+        return user_sessions[0].user_id
 
     def destroy_session(self, request=None):
         """ Deletes the user session / logout. """
@@ -47,8 +49,8 @@ class SessionDBAuth(SessionExpAuth):
         if not user_id:
             return False
         from models.user_session import UserSession
-        user_session = UserSession.search({'session_id': session_cookie})
-        if not user_session:
+        user_sessions = UserSession.search({'session_id': session_cookie})
+        if not user_sessions:
             return False
-        user_session[0].remove()
+        user_sessions[0].remove()
         return True

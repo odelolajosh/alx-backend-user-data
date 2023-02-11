@@ -26,13 +26,14 @@ def login() -> str:
         return jsonify({"error": "no user found for this email"}), 404
 
     for user in users:
-        if not user.is_valid_password(password):
-            return jsonify({"error": "wrong password"}), 401
-        from api.v1.app import auth
-        session_id = auth.create_session(user.id)
-        response = jsonify(user.to_json())
-        response.set_cookie(getenv('SESSION_NAME'), session_id)
-        return response
+        if user.is_valid_password(password):
+            from api.v1.app import auth
+            session_id = auth.create_session(user.id)
+            response = jsonify(user.to_json())
+            response.set_cookie(getenv('SESSION_NAME'), session_id)
+            return response
+    else:
+        return jsonify({"error": "wrong password"}), 401
 
 
 @app_views.route('/auth_session/logout', methods=['DELETE'],

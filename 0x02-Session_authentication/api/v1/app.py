@@ -37,15 +37,18 @@ def before_request() -> str:
     """
     if auth is None:
         return None
-    if auth.require_auth(request.path, ['/api/v1/status/',
-                                        '/api/v1/unauthorized/',
-                                        '/api/v1/forbidden/',
-                                        '/api/v1/auth_session/login/']):
-        if not auth.authorization_header(request) and \
-              not auth.session_cookie(request):
+    excluded_paths = [
+        '/api/v1/status/',
+        '/api/v1/unauthorized/',
+        '/api/v1/forbidden/',
+        '/api/v1/auth_session/login/'
+    ]
+    if auth.require_auth(request.path, excluded_paths):
+        if auth.session_cookie(request) is None and \
+            auth.authorization_header(request) is None:
             abort(401)
         current_user = auth.current_user(request)
-        if not current_user:
+        if current_user is None:
             abort(403)
         request.current_user = current_user
 
