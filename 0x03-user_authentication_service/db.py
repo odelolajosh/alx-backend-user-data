@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy import tuple_
 
 
 from user import Base, User
@@ -48,11 +49,16 @@ class DB:
     def find_user_by(self, **kwargs) -> User:
         """Find a user by a given keyword argument
         """
-        for key in kwargs:
+        keys, values = [], []
+        for key, value in kwargs.items():
             if not hasattr(User, key):
                 raise InvalidRequestError()
+            keys.append(key)
+            values.append(value)
 
-        result = self._session.query(User).filter_by(**kwargs).first()
+        result = self._session.query(User).filter(
+            tuple_(*keys).in_([tuple(values)])
+        ).first()
         if result is None:
             raise NoResultFound()
 
