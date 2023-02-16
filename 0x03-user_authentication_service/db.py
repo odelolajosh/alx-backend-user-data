@@ -9,7 +9,6 @@ from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import tuple_
 
-
 from user import Base, User
 
 
@@ -53,7 +52,7 @@ class DB:
         for key, value in kwargs.items():
             if not hasattr(User, key):
                 raise InvalidRequestError()
-            keys.append(key)
+            keys.append(getattr(User, key))
             values.append(value)
 
         result = self._session.query(User).filter(
