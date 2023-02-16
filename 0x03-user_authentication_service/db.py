@@ -50,6 +50,9 @@ class DB:
     def find_user_by(self, **kwargs) -> User:
         """Find a user by a given keyword argument
         """
+        if not kwargs:
+            raise InvalidRequestError()
+
         for key in kwargs:
             if not hasattr(User, key):
                 raise InvalidRequestError()
