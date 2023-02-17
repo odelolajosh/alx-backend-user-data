@@ -5,9 +5,10 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 
 
-@app.get("/", strict_slashes=True)
-def status():
-    return jsonify({"message": "Bienvenue"}), 200
+@app.route('/', methods=['GET'], strict_slashes=False)
+def welcome() -> str:
+    """ Welcome message. """
+    return jsonify({"message": "Bienvenue"})
 
 
 if __name__ == "__main__":
