@@ -66,7 +66,7 @@ class Auth:
         """ Return the User corresponding to a session id. """
         try:
             return self._db.find_user_by(session_id=session_id)
-        except NoResultFound:
+        except Exception:
             return None
 
     def destroy_session(self, user_id: int):

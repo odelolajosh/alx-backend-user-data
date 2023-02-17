@@ -37,10 +37,6 @@ def register_user() -> Response:
 def login():
     """ POST /sessions
     Logs in a user.
-    Return:
-        - Email of the user.
-        - Message
-        - 400 if email already registered.
     """
     email = request.form.get("email")
     password = request.form.get("password")
