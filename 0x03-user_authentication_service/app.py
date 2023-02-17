@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """ Authentication API. """
-from flask import Flask, jsonify, request, abort, Response
+from flask import Flask, jsonify, request, abort, redirect, Response
 from auth import Auth
 
 app = Flask(__name__)
@@ -52,6 +52,22 @@ def login():
     response = jsonify({"email": email, "message": "logged in"})
     response.set_cookie("session_id", session_id)
     return response
+
+
+@app.route("/sessions", methods=["DELETE"], strict_slashes=False)
+def logout():
+    """ DELETE /sessions
+    Logs out a user.
+    Return:
+        - Message
+        - 403 if no session cookie.
+    """
+    session_id = request.cookies.get("session_id")
+    user = auth.get_user_from_session_id(session_id)
+    if not user:
+        abort(403)
+    auth.destroy_session(user.id)
+    return redirect("/")
 
 
 if __name__ == "__main__":
