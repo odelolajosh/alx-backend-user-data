@@ -57,10 +57,7 @@ class DB:
             if not hasattr(User, key):
                 raise InvalidRequestError()
 
-        keys, values = zip(*kwargs.items())
-        result = self._session.query(User).filter(
-            tuple_(*keys).in_([tuple(values)])
-        ).first()
+        result = self._session.query(User).filter_by(**kwargs).first()
 
         if result is None:
             raise NoResultFound()
