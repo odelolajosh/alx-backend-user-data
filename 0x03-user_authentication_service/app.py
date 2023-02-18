@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """ Authentication API. """
-from flask import Flask, jsonify, request, abort, redirect, Response
+from flask import Flask, jsonify, request, abort, redirect
 from auth import Auth
 
 app = Flask(__name__)
@@ -8,13 +8,13 @@ AUTH = Auth()
 
 
 @app.route('/', methods=["GET"], strict_slashes=False)
-def welcome() -> Response:
+def welcome() -> str:
     """ Welcome message. """
     return jsonify({"message": "Bienvenue"})
 
 
 @app.route("/users", methods=["POST"], strict_slashes=False)
-def register_user() -> Response:
+def register_user() -> str:
     """ POST /users
     Register a user.
     Return:
@@ -66,7 +66,7 @@ def logout():
 
 
 @app.route("/profile", methods=["GET"], strict_slashes=False)
-def profile() -> Response:
+def profile() -> str:
     """ GET /profile
     Returns the user's profile.
     Return:
@@ -80,7 +80,7 @@ def profile() -> Response:
 
 
 @app.route("/reset_password", methods=["POST"], strict_slashes=False)
-def get_reset_password_token() -> Response:
+def get_reset_password_token() -> str:
     """ POST /reset_password
     Returns a reset password token.
     Return:
@@ -95,7 +95,7 @@ def get_reset_password_token() -> Response:
 
 
 @app.route("/reset_password", methods=["PUT"], strict_slashes=False)
-def update_password() -> Response:
+def update_password() -> str:
     """ PUT /reset_password
     Updates the user's password.
     Return:
