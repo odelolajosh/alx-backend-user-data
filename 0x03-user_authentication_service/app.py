@@ -55,8 +55,7 @@ def logout():
     """ DELETE /sessions
     Logs out a user.
     Return:
-        - Message
-        - 403 if no session cookie.
+        - Redirect to welcome page.
     """
     session_id = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(session_id)
@@ -71,14 +70,13 @@ def profile() -> Response:
     """ GET /profile
     Returns the user's profile.
     Return:
-        - Email of the user.
-        - 403 if no session cookie.
+        - User profile
     """
     session_id = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(session_id)
-    if not user:
+    if user is None:
         abort(403)
-    return jsonify({"email": user.email}), 200
+    return jsonify({"email": user.email})
 
 
 @app.route("/reset_password", methods=["POST"], strict_slashes=False)
@@ -86,8 +84,7 @@ def get_reset_password_token() -> Response:
     """ POST /reset_password
     Returns a reset password token.
     Return:
-        - Email of the user.
-        - 403 if no session cookie.
+        - reset token
     """
     email = request.form.get("email")
     try:
